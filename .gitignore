@@ -1,0 +1,16 @@
+# Ignore Node.js modules (assuming you're using Node.js)
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore environment configuration files (e.g., .env)
+.env
+
+# Ignore build or compiled files (e.g., compiled JavaScript files)
+dist/
+build/
+
+# Ignore local development files or settings (e.g., IDE-specific files)
+.vscode/
+.idea/
