@@ -6,16 +6,53 @@ import connectDB from './config/db.js'
 import authRoute from './routes/authRoute.js'
 import scheduleRoute from './routes/scheduleRoute.js'
 import statsRoute from './routes/statsRoute.js'
+import { Server } from "socket.io";
+import http from "http";
+import { trainUser } from './helpers/train.js'
+import cors from 'cors'
 
 // ENV file configuration
 dotenv.config()
 
 // connecting to MOngoDB database
 connectDB();
-
 // rest object
 const app = express()
-
+const server = http.createServer(app);
+app.use(cors());
+const io = new Server(server,
+    {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    }
+    );
+io.of('/ws').on('connection', (socket) => {
+    console.log('a user connected');
+    let pastState = null
+    socket.on("train",(taskId,landmarks)=>{
+            pastState = trainUser(taskId,
+            JSON.parse(landmarks)
+            ,pastState)
+            
+            socket.timeout(0)
+            .emit('feedback',
+            JSON.stringify(
+                {
+                    ...pastState,
+                }
+            )
+            )
+            if(pastState.finished){
+                socket.disconnect()
+            }
+    })
+    
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
 // middlewares
 app.use(express.json())
 app.use(morgan('dev'))
@@ -33,6 +70,6 @@ app.get('/',(req,res)=>{
 
 const PORT=process.env.PORT;
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log('Server is running'.bgCyan.white)
 })
