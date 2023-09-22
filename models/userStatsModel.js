@@ -11,41 +11,11 @@ const userStatsSchema = new mongoose.Schema({
             calories: { type: Number, default: 0 }
         }
     ],
-    monthlyStats: [
-        {
-            month: String,
-            calories: { type: Number, default: 0 }
-        }
-    ],
     trophies: {
         type:Number,
         default:0
     },
     healthScore: {
-        type:Number,
-        default:0
-    },
-    bicepsLevel: {
-        type:Number,
-        default:0
-    },
-    tricepsLevel: {
-        type:Number,
-        default:0
-    },
-    legsLevel: {
-        type:Number,
-        default:0
-    },
-    chestLevel: {
-        type:Number,
-        default:0
-    },
-    backLevel: {
-        type:Number,
-        default:0
-    },
-    shoulderLevel: {
         type:Number,
         default:0
     },
