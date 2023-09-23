@@ -42,7 +42,7 @@ io.of('/ws').on('connection', (socket) => {
             JSON.parse(landmarks)
             ,pastState)
             
-            socket.timeout(0)
+            socket.timeout(10)
             .emit('feedback',
             JSON.stringify(
                 {

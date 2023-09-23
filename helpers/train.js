@@ -150,7 +150,7 @@ function countBicepCurls(landmarks,state) {
           console.log(state.count, " ", state.movement, " decrement ", angle);
           state.movement = 1;
         // find abs difference between current angle and low angle
-         state.accuracy = Math.abs(exrInfo[exercise].lowAngle - angle);
+         state.accuracy = Math.abs(exrInfo[exercise].lowAngle - angle)/1000;
           state.feedback = "Good Low, Now move up";
         }
       }
@@ -158,7 +158,7 @@ function countBicepCurls(landmarks,state) {
         if (state.movement === 1) {
             console.log(state.count, " ", state.movement, " increment ", angle);
             state.count += 1;
-            state.accuracy = Math.abs(exrInfo[exercise].highAngle - angle);
+            state.accuracy = (Math.abs(exrInfo[exercise].highAngle - angle))/1000;
             state.feedback = "Good High, Now move down";
           state.movement = 0;
         }
