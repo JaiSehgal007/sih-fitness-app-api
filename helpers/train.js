@@ -1,28 +1,98 @@
-
+import userMuscle from "../models/userMuscleModel.js";
+import exercise from "../models/exerciseModel.js";
 const counter = {
     1: countBicepCurls
+}
+function getExerciseCounter(eId){
+  return countBicepCurls;
 }
 const init_state = {
     count: 0,
     movement: 0,
     accuracy: 0,
-    feedback: "Start"
+    feedback: "Start",
+    limit: -1,
 }
-export function trainUser(taskId,landmarks,pastState){
-    if(pastState === null){
+/*
+    task: {
+        userId: int,
+        eId: int,
+    }
+    landmarks: {
+        x: int,
+        y: int
+    }[]
+    pastState: {
+        count: int,
+        movement: int,
+        accuracy: int,
+        feedback: string
+    }
+*/
+export async function trainUser(task,landmarks,pastState){
+  if(pastState === null){
         pastState = init_state
     }
-    // dummy target for task
-    let task = {
-        userId: 1,
-        limit: 10,
-        eId: 1,
+    if(pastState.finished) return pastState;
+    if(pastState.limit==-1){
+      console.log("setting limit ",task,pastState);
+      // fetch current muscle strength from mongodb
+      const mu = await userMuscle.findOne({client: task.userId});
+      if(mu === null){
+          pastState.feedback = "User not found"
+          return pastState;
+      }
+      const ex =  await exercise.findOne({_id: task.eId});
+      if(ex === null){
+          pastState.feedback = "exercise not found"
+          return pastState;
+      }
+      const muscle_id = ex.muscle_id;
+      // find muscle strength from muscle_id
+      let muscle=null;
+      for(let i=0;i<mu.muscleData.length;i++){
+          if(mu.muscleData[i].muscle_id.equals(muscle_id)){
+              muscle = mu.muscleData[i];
+              break;
+          }
+      }
+      console.log("Muscle id",muscle_id,"mu ",mu,"ex",ex,"muscle",muscle)
+      if(!muscle){
+          pastState.feedback = "Muscle not found"
+          return pastState;
+      }
+      const muscle_strength = muscle.value;
+        // find limit based on current muscle strength using- (prev/10+1)*12
+      let limit = (muscle_strength / 10 + 1) * 12;
+      console.log("Limit",limit)
+      pastState.limit = limit;
     }
-    let state = counter[task.eId](landmarks,pastState)
-    if(state.count >= task.limit){
+    let state = getExerciseCounter(task.eid)(landmarks,pastState)
+    if(state.count >= state.limit){
         console.log("Task completed for user ",task.userId)
         state.feedback = "Finished"
-        state.finished = true
+        state.finished = true;
+        // update muscle 
+        const mu = await userMuscle.findOne({client: task.userId});
+        if(mu === null){
+            pastState.feedback = "User not found"
+            return pastState;
+        }
+        const ex =  await exercise.findOne({_id: task.eId});
+        if(ex === null){
+            pastState.feedback = "exercise not found"
+            return pastState;
+        }
+        const muscle_id = ex.muscle_id;
+        // find muscle strength from muscle_id
+        let muscle= mu.muscleData.find((muscle) => muscle.muscle_id.equals(muscle_id));
+        if(!muscle){
+            pastState.feedback = "Muscle not found"
+            return pastState;
+        }
+        muscle.value += 10;
+        await mu.save();
+        // console.log("Muscle id",muscle_id,"mu ",mu,"ex",ex,"muscle",muscle,"updated successfull")
     }
     else if(state.count > pastState.count) { 
         console.log("Task incomplete current staet",state)
@@ -31,7 +101,7 @@ export function trainUser(taskId,landmarks,pastState){
 }
 
 // counting biceps curls given landmarks and state information
-// state represent phase for the excercise to keep track of the excercise
+// state represent phase for the exercise to keep track of the exercise
 // at the end of the state update the counter 
 // landmarks are from media pipe model
 // assuming    right
@@ -39,7 +109,7 @@ export function trainUser(taskId,landmarks,pastState){
 function angleOfSingleLine(point1,point2){
     return Math.atan2(point2.y-point1.y,point2.x-point1.x);
 }
-// excercise parameters
+// exercise parameters
 const exrInfo = {
     bicepCurls: {
       index: [12, 14, 16],

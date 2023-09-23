@@ -35,8 +35,10 @@ const io = new Server(server,
 io.of('/ws').on('connection', (socket) => {
     console.log('a user connected');
     let pastState = null
-    socket.on("train",(taskId,landmarks)=>{
-            pastState = trainUser(taskId,
+    socket.on("train",async (task,landmarks)=>{
+            pastState = await trainUser(
+                JSON.parse(task)
+                ,
             JSON.parse(landmarks)
             ,pastState)
             
