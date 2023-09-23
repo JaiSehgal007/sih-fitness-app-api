@@ -13,7 +13,7 @@ const userMuscleSchema = new mongoose.Schema({
             },
             value: {
                 type: Number,
-                required: true
+                default: 0
             }
         }
     ]
