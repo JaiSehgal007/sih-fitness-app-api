@@ -143,7 +143,9 @@ function countBicepCurls(landmarks,state) {
     const angle = angleBetweenThreePoints(arm,elbow,shoulder)
     const exercise = "bicepCurls"
     // check for state
-    if (angle > exrInfo[exercise].highAngle) {
+    if (
+        angle < 170 &&
+        angle > exrInfo[exercise].highAngle) {
         
         if (state.movement === 0) {
           
@@ -154,7 +156,9 @@ function countBicepCurls(landmarks,state) {
           state.feedback = "Good Low, Now move up";
         }
       }
-      if (angle < exrInfo[exercise].lowAngle) {
+      if ( 
+        angle > 20 &&
+        angle < exrInfo[exercise].lowAngle) {
         if (state.movement === 1) {
             console.log(state.count, " ", state.movement, " increment ", angle);
             state.count += 1;
