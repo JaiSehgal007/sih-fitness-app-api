@@ -11,19 +11,54 @@ import exerciseRoute from './routes/exerciseRoute.js'
 import muscleRoute from './routes/muscleRoute.js'
 import userMuscleRoute from './routes/userMuscleRoute.js'
 import activityLogRoute from './routes/activityLogRoute.js'
+import { Server } from "socket.io";
+import http from "http";
+import { trainUser } from './helpers/train.js'
 
 // ENV file configuration
 dotenv.config()
 
 // connecting to MongoDB database
 connectDB();
-
 // rest object
 const app = express()
-
-// cors
+const server = http.createServer(app);
 app.use(cors());
-
+const io = new Server(server,
+    {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    }
+    );
+io.of('/ws').on('connection', (socket) => {
+    console.log('a user connected');
+    let pastState = null
+    socket.on("train",async (task,landmarks)=>{
+            pastState = await trainUser(
+                JSON.parse(task)
+                ,
+            JSON.parse(landmarks)
+            ,pastState)
+            
+            socket.timeout(10)
+            .emit('feedback',
+            JSON.stringify(
+                {
+                    ...pastState,
+                }
+            )
+            )
+            if(pastState.finished){
+                socket.disconnect()
+            }
+    })
+    
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
 // middlewares
 app.use(express.json())
 app.use(morgan('dev'))
@@ -50,6 +85,6 @@ app.get('/',(req,res)=>{
 
 const PORT=process.env.PORT;
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log('Server is running'.bgCyan.white)
 })

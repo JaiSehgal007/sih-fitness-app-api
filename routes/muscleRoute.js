@@ -4,10 +4,12 @@ import UserMuscle from '../models/userMuscleModel.js'
 
 const router=express.Router()
 
-router.get('/get-muscle-data',requireSignIn, async (req, res) => {
+router.get('/get-muscle-data', async (req, res) => {
     try {
+      // query parameter: userId
+      const userId = req.query?.userId;
       // Retrieve user muscle data based on the authenticated user's ID (req.user._id)
-      const userMuscleData = await UserMuscle.findOne({ client: req.user._id });
+      const userMuscleData = await UserMuscle.findOne({ client: userId ?? req.user._id });
   
       if (!userMuscleData) {
         return res.status(404).json({ message: 'User muscle data not found' });
@@ -22,26 +24,32 @@ router.get('/get-muscle-data',requireSignIn, async (req, res) => {
     }
 });
 
-router.post('/set-muscle-data',requireSignIn,async (req, res) => {
+router.post('/set-muscle-data',async (req, res) => {
     try {
+      // 
+      const userId = req.body?.userId;
+      console.log("userId",userId);
       // Retrieve the user's userMuscle document based on the authenticated user's ID (req.user._id)
-      let userMuscle = await UserMuscle.findOne({ client: req.user._id });
+      let userMuscle = await UserMuscle.findOne({ client: userId ?? req.user._id });
   
       // If no userMuscle document exists for the user, create a new one
       if (!userMuscle) {
-        userMuscle = new UserMuscle({ client: req.user._id, muscleData: [] });
+        userMuscle = new UserMuscle({ client: userId ?? req.user._id, muscleData: [] });
       }
   
       // Create a new muscleData entry based on the request body
-      const newMuscleDataEntry = {
-        muscle_id: req.body.muscle_id,
-        value: req.body.value
-      };
-  
-      // Append the new muscleData entry to the muscleData array
-      userMuscle.muscleData.push(newMuscleDataEntry);
-  
-      // Save the updated userMuscle document
+      if(!(req.body.muscle_id==null || req.body.value==null)){
+
+        const newMuscleDataEntry = {
+          muscle_id: req.body.muscle_id,
+          value: req.body.value
+        };
+    
+        // Append the new muscleData entry to the muscleData array
+        userMuscle.muscleData.push(newMuscleDataEntry);
+    
+        // Save the updated userMuscle document
+      }
       await userMuscle.save();
   
       res.status(201).json({ message: 'Muscle data entry added successfully', muscleData: userMuscle.muscleData });

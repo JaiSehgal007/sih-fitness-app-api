@@ -1,4 +1,5 @@
 import userModel from '../models/userModel.js'
+import userMuscle from '../models/userMuscleModel.js'
 import {comparePassword, hashPassword} from '../helpers/authHelper.js'
 import JWT from 'jsonwebtoken'
 
@@ -37,12 +38,21 @@ export const registerController = async (req, res) => {
                 message: 'user already registered',
             });
         }
-
+        
         // register user
         const hashedPassword =await hashPassword(password);
 
         // save
         const user = await new userModel({name:name,age:age,gender:gender,email:email,password:hashedPassword,answer:answer}).save();
+        // generate user muscle data for each muscle in the database
+        const muscles = await userMuscle.find({});
+        const muscleData = muscles.map((muscle) => ({
+            muscle_id: muscle._id,
+            value: 0,
+        }));
+
+        // create entry in userMuscle collection
+        const newUserMuscle = new userMuscle({client: user._id, muscleData});
         res.status(201).send({
             success:true,
             message:'User registered successfully',
