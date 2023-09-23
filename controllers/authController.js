@@ -100,9 +100,8 @@ export const loginController= async (req,res)=>{
             user:{
                 name:user.name,
                 email:user.email,
-                phone:user.phone,
-                address:user.address,
-                role:user.role,
+                gender:user.gender,
+                age:user.age,
             },
             token,
         });
