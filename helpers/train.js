@@ -63,7 +63,7 @@ export async function trainUser(task,landmarks,pastState){
       }
       const muscle_strength = muscle.value;
         // find limit based on current muscle strength using- (prev/10+1)*12
-      let limit = (muscle_strength / 10 + 1) * 12;
+      let limit =  Math.ceil((muscle_strength / 10 + 1) * 12);
       console.log("Limit",limit)
       pastState.limit = limit;
     }
