@@ -45,7 +45,7 @@ app.use('/api/v1/muscle',muscleRoute)
 app.use('/api/v1/usermuscle',userMuscleRoute)
 
 app.get('/',(req,res)=>{
-    res.send('<h1>Welcome to FitCoach Website</h1>')
+    res.send('<h1>Welcome to MotionMentor Website</h1>')
 });
 
 const PORT=process.env.PORT;
