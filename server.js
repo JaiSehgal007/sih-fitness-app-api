@@ -6,6 +6,10 @@ import connectDB from './config/db.js'
 import authRoute from './routes/authRoute.js'
 import scheduleRoute from './routes/scheduleRoute.js'
 import statsRoute from './routes/statsRoute.js'
+import exerciseRoute from './routes/exerciseRoute.js'
+import muscleRoute from './routes/muscleRoute.js'
+import userMuscleRoute from './routes/userMuscleRoute.js'
+import activityLogRoute from './routes/activityLogRoute.js'
 import { Server } from "socket.io";
 import http from "http";
 import { trainUser } from './helpers/train.js'
@@ -14,7 +18,7 @@ import cors from 'cors'
 // ENV file configuration
 dotenv.config()
 
-// connecting to MOngoDB database
+// connecting to MongoDB database
 connectDB();
 // rest object
 const app = express()
@@ -63,6 +67,14 @@ app.use('/api/v1/auth',authRoute);
 app.use('/api/v1/userschedule',scheduleRoute);
 // statistics routes
 app.use('/api/v1/userstats',statsRoute)
+// activity routes
+app.use('/api/v1/activitylog',activityLogRoute)
+// exercise Routes
+app.use('/api/v1/exercise',exerciseRoute)
+// muscle Routes
+app.use('/api/v1/muscle',muscleRoute)
+// user Muscle route
+app.use('/api/v1/usermuscle',userMuscleRoute)
 
 app.get('/',(req,res)=>{
     res.send('<h1>Welcome to FitCoach Website</h1>')
