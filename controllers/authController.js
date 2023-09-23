@@ -2,6 +2,7 @@ import userModel from '../models/userModel.js'
 import userMuscle from '../models/userMuscleModel.js'
 import {comparePassword, hashPassword} from '../helpers/authHelper.js'
 import JWT from 'jsonwebtoken'
+import muscle from '../models/muscleModel.js'
 
 // POST register
 export const registerController = async (req, res) => {
@@ -45,7 +46,8 @@ export const registerController = async (req, res) => {
         // save
         const user = await new userModel({name:name,age:age,gender:gender,email:email,password:hashedPassword,answer:answer}).save();
         // generate user muscle data for each muscle in the database
-        const muscles = await userMuscle.find({});
+        const muscles = await muscle.find({});
+        console.log("muscles ", muscles);
         const muscleData = muscles.map((muscle) => ({
             muscle_id: muscle._id,
             value: 0,
@@ -53,10 +55,13 @@ export const registerController = async (req, res) => {
 
         // create entry in userMuscle collection
         const newUserMuscle = new userMuscle({client: user._id, muscleData});
+        console.log("ncreating new user ", newUserMuscle);
+        await newUserMuscle.save();
         res.status(201).send({
             success:true,
             message:'User registered successfully',
             user,
+            newUserMuscle
         });
 
     } catch (error) {

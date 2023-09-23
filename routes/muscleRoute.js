@@ -1,16 +1,24 @@
 import express from 'express'
 import { requireSignIn } from '../middlewares/authMiddleware.js';
 import UserMuscle from '../models/userMuscleModel.js'
-
+import muscle from '../models/muscleModel.js'
 const router=express.Router()
 
-router.get('/get-muscle-data', async (req, res) => {
+router.get('/get-muscle-data',requireSignIn, async (req, res) => {
     try {
       // query parameter: userId
       const userId = req.query?.userId;
-      // Retrieve user muscle data based on the authenticated user's ID (req.user._id)
-      const userMuscleData = await UserMuscle.findOne({ client: userId ?? req.user._id });
-  
+      console.log("user" , req.user);
+      // Retrieve user muscle data based on the authenticated user's ID (req.user._id) along with muscle data
+      const userMuscleData = await UserMuscle.findOne({ client: userId ?? req.user._id }).populate('muscleData.muscle_id');
+      // populate('muscleData.muscle_id', 'name url')
+
+      // for (let i = 0; i < userMuscleData.muscleData.length; i++) {
+      //   const mus = userMuscleData.muscleData[i];
+        
+      //   const muscleData = await muscle.findById(mus.mus_id);
+      //   mus.muscle_id = muscleData;
+      // }
       if (!userMuscleData) {
         return res.status(404).json({ message: 'User muscle data not found' });
       }
@@ -24,7 +32,7 @@ router.get('/get-muscle-data', async (req, res) => {
     }
 });
 
-router.post('/set-muscle-data',async (req, res) => {
+router.post('/set-muscle-data',requireSignIn,async (req, res) => {
     try {
       // 
       const userId = req.body?.userId;

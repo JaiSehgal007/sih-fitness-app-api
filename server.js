@@ -27,8 +27,10 @@ app.use(cors());
 const io = new Server(server,
     {
         cors: {
-            origin: "*",
-            methods: ["GET", "POST"]
+            origin: "http://localhost:3000",
+            methods: ["GET", "POST"],
+            credentials: true
+            // authorization header
         }
     }
     );
