@@ -14,7 +14,6 @@ import activityLogRoute from './routes/activityLogRoute.js'
 import { Server } from "socket.io";
 import http from "http";
 import { trainUser } from './helpers/train.js'
-import cors from 'cors'
 
 // ENV file configuration
 dotenv.config()
