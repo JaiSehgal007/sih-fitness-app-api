@@ -1,5 +1,5 @@
 # sih-fitness-app-api
-This repository contains the backend code for The Peasants team sih project
+This repository contains the backend code for The Peasants team SIH(Smart India Hackathon) project
 
 ## Link to the Frontend Repository
 ```
@@ -8,14 +8,14 @@ This repository contains the backend code for The Peasants team sih project
 
 # FitQuest
 
-This is the GitHub repository for "FitQuest". It is a project developed as part of the Smart India Hackathon 2023, on problem statement student innovation, ID:1494, which involves project having Ideas that can boost fitness activities and assist in keeping fit.
+This is the GitHub repository for "FitQuest". It is a project developed as part of the Smart India Hackathon 2023, on problem statement student innovation, ID:1494, which involves a project having Ideas that can boost fitness activities and assist in keeping fit.
 
 ## What is FitQuest?
 
 FitQuest is a cutting-edge fitness app designed to guide users in performing exercises correctly by capturing and analyzing their body movements. It also helps users manage their daily workout routines and track their calorie intake. FitQuest is your personal fitness companion, ensuring that you achieve optimal form and efficiency in your workouts while also assisting in achieving your fitness and nutrition goals.
 
 ## Features
-* **Posture Monitoring:**  Uses the Machine Learning Libraries such as openCV and MediaPipe to guide correct exercise form to prevent injuries and optimize workouts.
+* **Posture Monitoring:**  Uses Machine Learning Libraries such as openCV and MediaPipe to guide correct exercise forms to prevent injuries and optimize workouts.
 
 * **Routine Scheduling:** Personalizes and schedules daily fitness plans for your goals.
 
@@ -49,7 +49,7 @@ FitQuest is a cutting-edge fitness app designed to guide users in performing exe
 
 
 ## Technology Stack:
-- MediaPipe and OpenCV for building Machine Leaning Model
+- MediaPipe and OpenCV for building Machine learning model
 - React for the frontend
 - Node/Express for the backend
-- MongoDb for the database
+- MongoDB for the database
