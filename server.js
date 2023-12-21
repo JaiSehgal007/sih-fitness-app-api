@@ -27,7 +27,7 @@ app.use(cors());
 const io = new Server(server,
     {
         cors: {
-            origin: "http://localhost:3000",
+            origin: "https://fit-quest-mu.vercel.app",
             methods: ["GET", "POST"],
             credentials: true
             // authorization header
