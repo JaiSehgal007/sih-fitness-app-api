@@ -1,17 +1,10 @@
 # sih-fitness-app-api
 This repository contains the backend code for The Peasants team SIH(Smart India Hackathon) project
 
-## Live Demo
-[https://fit-quest-mu.vercel.app/](https://fit-quest-mu.vercel.app/)
-
 ## Link to the Frontend Repository
-[https://github.com/JaiSehgal007/sih-fitness-app](https://github.com/JaiSehgal007/sih-fitness-app)
-
-## Screenshots
-![Img1](assets/img1.png)
-![Img2](assets/img2.png)
-![Img3](assets/img3.png)
-
+```
+   https://github.com/JaiSehgal007/sih-fitness-app
+```
 
 # FitQuest
 
